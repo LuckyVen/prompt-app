@@ -148,3 +148,141 @@ body {
     animation-iteration-count: 1 !important;
   }
 }
+
+/* =========================================================
+   PROMPT. APPEARANCE THEMES
+========================================================= */
+
+:root,
+html[data-theme="light"] {
+  --color-background: #f8f8fa;
+  --color-surface: #ffffff;
+
+  --color-text-primary: #18181b;
+  --color-text-secondary: #71717a;
+  --color-text-muted: #a1a1aa;
+
+  --color-border: #e4e4e7;
+
+  --color-primary: #6d5dfb;
+  --color-primary-hover: #5d4ced;
+  --color-primary-soft: #efedff;
+
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+html[data-theme="dark"] {
+  --color-background: #111113;
+  --color-surface: #18181b;
+
+  --color-text-primary: #f4f4f5;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
+
+  --color-border: #2f2f35;
+
+  --color-primary: #8377ff;
+  --color-primary-hover: #978dff;
+  --color-primary-soft: #292542;
+
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+/* Smooth theme switch */
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+body {
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+/* =========================================================
+   DARK MODE COMPATIBILITY
+
+   These help existing components that still use hard-coded
+   Tailwind zinc/white utilities.
+========================================================= */
+
+html[data-theme="dark"] .bg-white {
+  background-color: var(--color-surface);
+}
+
+html[data-theme="dark"] .bg-zinc-50 {
+  background-color: #1d1d21;
+}
+
+html[data-theme="dark"] .bg-zinc-100 {
+  background-color: #27272a;
+}
+
+html[data-theme="dark"] .text-zinc-950,
+html[data-theme="dark"] .text-zinc-900 {
+  color: #f4f4f5;
+}
+
+html[data-theme="dark"] .text-zinc-800,
+html[data-theme="dark"] .text-zinc-700 {
+  color: #d4d4d8;
+}
+
+html[data-theme="dark"] .text-zinc-600,
+html[data-theme="dark"] .text-zinc-500 {
+  color: #a1a1aa;
+}
+
+html[data-theme="dark"] .text-zinc-400 {
+  color: #71717a;
+}
+
+html[data-theme="dark"] .border-zinc-100 {
+  border-color: #27272a;
+}
+
+html[data-theme="dark"] .border-zinc-200 {
+  border-color: #2f2f35;
+}
+
+html[data-theme="dark"] .border-zinc-300 {
+  border-color: #3f3f46;
+}
+
+html[data-theme="dark"] .hover\:bg-zinc-50:hover {
+  background-color: #202024;
+}
+
+html[data-theme="dark"] .hover\:bg-zinc-100:hover {
+  background-color: #27272a;
+}
+
+/* Inputs */
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+  color: var(--color-text-primary);
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Native browser controls */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+}

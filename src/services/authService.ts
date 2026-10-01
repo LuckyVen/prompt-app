@@ -2,6 +2,10 @@ import {
   apiRequest,
 } from "./api";
 
+/* =========================================================
+   USER
+========================================================= */
+
 export interface AuthUser {
   id: string;
   name: string;
@@ -10,13 +14,12 @@ export interface AuthUser {
   updated_at: string;
 }
 
+/* =========================================================
+   REGISTER
+========================================================= */
+
 export interface RegisterInput {
   name: string;
-  email: string;
-  password: string;
-}
-
-export interface LoginInput {
   email: string;
   password: string;
 }
@@ -27,18 +30,6 @@ export interface RegisterResponse {
   user: AuthUser;
 }
 
-export interface LoginResponse {
-  success: boolean;
-  message: string;
-  token: string;
-  user: AuthUser;
-}
-
-export interface CurrentUserResponse {
-  success: boolean;
-  user: AuthUser;
-}
-
 export async function registerUser(
   input: RegisterInput,
 ): Promise<RegisterResponse> {
@@ -46,9 +37,28 @@ export async function registerUser(
     "/auth/register",
     {
       method: "POST",
-      body: JSON.stringify(input),
+
+      body: JSON.stringify(
+        input,
+      ),
     },
   );
+}
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  token: string;
+  user: AuthUser;
 }
 
 export async function loginUser(
@@ -58,9 +68,21 @@ export async function loginUser(
     "/auth/login",
     {
       method: "POST",
-      body: JSON.stringify(input),
+
+      body: JSON.stringify(
+        input,
+      ),
     },
   );
+}
+
+/* =========================================================
+   CURRENT USER
+========================================================= */
+
+export interface CurrentUserResponse {
+  success: boolean;
+  user: AuthUser;
 }
 
 export async function getCurrentUser(
@@ -70,10 +92,68 @@ export async function getCurrentUser(
     "/auth/me",
     {
       method: "GET",
+
       headers: {
         Authorization:
           `Bearer ${token}`,
       },
+    },
+  );
+}
+
+/* =========================================================
+   FORGOT PASSWORD
+========================================================= */
+
+export interface ForgotPasswordInput {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+export async function requestPasswordReset(
+  input: ForgotPasswordInput,
+): Promise<ForgotPasswordResponse> {
+  return apiRequest<ForgotPasswordResponse>(
+    "/auth/forgot-password",
+    {
+      method: "POST",
+
+      body: JSON.stringify(
+        input,
+      ),
+    },
+  );
+}
+
+/* =========================================================
+   RESET PASSWORD
+========================================================= */
+
+export interface ResetPasswordInput {
+  token: string;
+  password: string;
+}
+
+export interface ResetPasswordResponse {
+  success: boolean;
+  message: string;
+}
+
+export async function resetPassword(
+  input: ResetPasswordInput,
+): Promise<ResetPasswordResponse> {
+  return apiRequest<ResetPasswordResponse>(
+    "/auth/reset-password",
+    {
+      method: "POST",
+
+      body: JSON.stringify(
+        input,
+      ),
     },
   );
 }

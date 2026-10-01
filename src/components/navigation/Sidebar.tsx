@@ -1,29 +1,22 @@
 import {
   FileText,
   Heart,
-  LayoutTemplate,
-  LogIn,
-  LogOut,
+  LayoutGrid,
   Plus,
-  Settings,
 } from "lucide-react";
 
 import {
+  Link,
   NavLink,
-  useNavigate,
 } from "react-router-dom";
 
-import {
-  useAuth,
-} from "../../hooks/useAuth";
+import AccountMenu from "../account/AccountMenu";
 
-interface NavigationItem {
-  label: string;
-  to: string;
-  icon: typeof FileText;
-}
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
-const navigationItems: NavigationItem[] = [
+const navigationItems = [
   {
     label: "My Prompts",
     to: "/prompts",
@@ -37,56 +30,64 @@ const navigationItems: NavigationItem[] = [
   {
     label: "Templates",
     to: "/templates",
-    icon: LayoutTemplate,
+    icon: LayoutGrid,
   },
 ];
 
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
 function Sidebar() {
-  const navigate = useNavigate();
-
-  const {
-    user,
-    logout,
-  } = useAuth();
-
-  const initials = user?.name
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) =>
-      part.charAt(0).toUpperCase(),
-    )
-    .join("");
-
-  function handleLogout() {
-    logout();
-
-    navigate(
-      "/login",
-      {
-        replace: true,
-      },
-    );
-  }
-
   return (
-    <aside className="hidden h-screen w-60 shrink-0 flex-col border-r border-border bg-surface lg:flex">
-      {/* Brand */}
+    <aside
+      className="
+        hidden
+        h-full
+        w-[260px]
+        shrink-0
+        flex-col
+        border-r
+        border-border
+        bg-surface
+        lg:flex
+      "
+    >
+      {/* =================================================
+          BRAND
+      ================================================= */}
+
       <div className="flex h-16 shrink-0 items-center px-5">
-        <NavLink
+        <Link
           to="/"
-          className="text-xl font-semibold tracking-tight text-text-primary"
+          className="text-xl font-semibold tracking-[-0.03em] text-text-primary"
         >
           PROMPT.
-        </NavLink>
+        </Link>
       </div>
 
-      {/* New Prompt */}
+      {/* =================================================
+          NEW PROMPT
+      ================================================= */}
+
       <div className="px-4 pt-3">
-        <NavLink
+        <Link
           to="/"
-          className="flex h-11 items-center justify-center gap-2 rounded-prompt-md bg-primary px-4 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+          className="
+            flex
+            h-11
+            w-full
+            items-center
+            justify-center
+            gap-2
+            rounded-xl
+            bg-primary
+            text-sm
+            font-semibold
+            text-white
+            transition
+            hover:bg-primary-hover
+          "
         >
           <Plus
             size={18}
@@ -94,11 +95,14 @@ function Sidebar() {
           />
 
           New Prompt
-        </NavLink>
+        </Link>
       </div>
 
-      {/* Main Navigation */}
-      <nav className="mt-6 flex-1 px-3">
+      {/* =================================================
+          NAVIGATION
+      ================================================= */}
+
+      <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-5">
         <div className="space-y-1">
           {navigationItems.map(
             (item) => {
@@ -107,14 +111,19 @@ function Sidebar() {
 
               return (
                 <NavLink
-                  key={item.to}
-                  to={item.to}
+                  key={
+                    item.to
+                  }
+                  to={
+                    item.to
+                  }
                   end
                   className={({
                     isActive,
                   }) =>
                     [
-                      "flex h-10 items-center gap-3 rounded-prompt-md px-3 text-sm font-medium transition-colors",
+                      "flex h-10 items-center gap-3 rounded-xl px-3 text-sm font-medium transition-colors",
+
                       isActive
                         ? "bg-primary-soft text-primary"
                         : "text-text-secondary hover:bg-background hover:text-text-primary",
@@ -122,12 +131,14 @@ function Sidebar() {
                   }
                 >
                   <Icon
-                    size={18}
+                    size={17}
                     strokeWidth={1.8}
                   />
 
                   <span>
-                    {item.label}
+                    {
+                      item.label
+                    }
                   </span>
                 </NavLink>
               );
@@ -136,91 +147,12 @@ function Sidebar() {
         </div>
       </nav>
 
-      {/* Bottom */}
-      <div className="border-t border-border p-3">
-        {user ? (
-          <>
-            <NavLink
-              to="/settings"
-              className={({
-                isActive,
-              }) =>
-                [
-                  "flex h-10 items-center gap-3 rounded-prompt-md px-3 text-sm font-medium transition-colors",
-                  isActive
-                    ? "bg-primary-soft text-primary"
-                    : "text-text-secondary hover:bg-background hover:text-text-primary",
-                ].join(" ")
-              }
-            >
-              <Settings
-                size={18}
-                strokeWidth={1.8}
-              />
+      {/* =================================================
+          ACCOUNT
+      ================================================= */}
 
-              <span>
-                Settings
-              </span>
-            </NavLink>
-
-            <NavLink
-              to="/profile"
-              className={({
-                isActive,
-              }) =>
-                [
-                  "mt-2 flex items-center gap-3 rounded-prompt-md p-2 transition-colors",
-                  isActive
-                    ? "bg-primary-soft"
-                    : "hover:bg-background",
-                ].join(" ")
-              }
-            >
-              <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-soft text-xs font-semibold text-primary">
-                {initials || "U"}
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-text-primary">
-                  {user.name}
-                </p>
-
-                <p className="truncate text-xs text-text-muted">
-                  {user.email}
-                </p>
-              </div>
-            </NavLink>
-
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="mt-2 flex h-10 w-full items-center gap-3 rounded-prompt-md px-3 text-sm font-medium text-text-secondary transition-colors hover:bg-red-50 hover:text-red-600"
-            >
-              <LogOut
-                size={18}
-                strokeWidth={1.8}
-              />
-
-              <span>
-                Log out
-              </span>
-            </button>
-          </>
-        ) : (
-          <NavLink
-            to="/login"
-            className="flex h-10 items-center gap-3 rounded-prompt-md px-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background hover:text-text-primary"
-          >
-            <LogIn
-              size={18}
-              strokeWidth={1.8}
-            />
-
-            <span>
-              Sign in
-            </span>
-          </NavLink>
-        )}
+      <div className="shrink-0 border-t border-border p-2">
+        <AccountMenu variant="sidebar" />
       </div>
     </aside>
   );

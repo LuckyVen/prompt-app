@@ -1275,7 +1275,7 @@ function PromptWorkspacePage() {
           {/* PROMPT INFORMATION                      */}
           {/* ======================================= */}
 
-          <section className="mt-6 rounded-prompt-lg border border-border bg-surface-elevated p-5 sm:p-6">
+          <section className="mt-6 rounded-prompt-lg border border-border bg-surface p-5 sm:p-6">
 
             <p className="text-xs font-medium uppercase tracking-wide text-text-muted">
               About this prompt

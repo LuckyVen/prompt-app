@@ -13,6 +13,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
 
 import HomePage from "./pages/prompts/HomePage";
 import SmartBuilderPage from "./pages/prompts/SmartBuilderPage";
@@ -26,103 +27,153 @@ import TemplatesPage from "./pages/templates/TemplatesPage";
 import ProfilePage from "./pages/account/ProfilePage";
 import SettingsPage from "./pages/account/SettingsPage";
 
-const router = createBrowserRouter([
-  {
-    element: <AppLayout />,
-    children: [
-      // ==============================
-      // PUBLIC ROUTES
-      // ==============================
+/* =========================================================
+   ROUTER
+========================================================= */
 
-      {
-        path: "/",
-        element: <HomePage />,
-      },
+const router =
+  createBrowserRouter([
+    /* =====================================================
+       MAIN APPLICATION
+    ===================================================== */
 
-      {
-        path: "/templates",
-        element: <TemplatesPage />,
-      },
+    {
+      element:
+        <AppLayout />,
 
-      // ==============================
-      // PROTECTED ROUTES
-      // ==============================
+      children: [
+        /* ===============================================
+           PUBLIC ROUTES
+        =============================================== */
 
-      {
-        element: <ProtectedRoute />,
-        children: [
-          {
-            path: "/prompts",
-            element: <MyPromptsPage />,
-          },
+        {
+          path: "/",
+          element:
+            <HomePage />,
+        },
 
-          {
-            path: "/prompts/new",
-            element: <SmartBuilderPage />,
-          },
+        {
+          path:
+            "/templates",
+          element:
+            <TemplatesPage />,
+        },
 
-          {
-            path: "/prompts/:id",
-            element: <PromptWorkspacePage />,
-          },
+        /* ===============================================
+           PROTECTED ROUTES
+        =============================================== */
 
-          {
-            path: "/improve",
-            element: <ImprovePromptPage />,
-          },
+        {
+          element:
+            <ProtectedRoute />,
 
-          {
-            path: "/favorites",
-            element: <FavoritesPage />,
-          },
+          children: [
+            {
+              path:
+                "/prompts",
+              element:
+                <MyPromptsPage />,
+            },
 
-          {
-            path: "/profile",
-            element: <ProfilePage />,
-          },
+            {
+              path:
+                "/prompts/new",
+              element:
+                <SmartBuilderPage />,
+            },
 
-          {
-            path: "/settings",
-            element: <SettingsPage />,
-          },
-        ],
-      },
+            {
+              path:
+                "/prompts/:id",
+              element:
+                <PromptWorkspacePage />,
+            },
 
-      // ==============================
-      // NOT FOUND
-      // ==============================
+            {
+              path:
+                "/improve",
+              element:
+                <ImprovePromptPage />,
+            },
 
-      {
-        path: "*",
-        element: <NotFoundPage />,
-      },
-    ],
-  },
+            {
+              path:
+                "/favorites",
+              element:
+                <FavoritesPage />,
+            },
 
-  // ==============================
-  // AUTH ROUTES
-  // ==============================
+            {
+              path:
+                "/profile",
+              element:
+                <ProfilePage />,
+            },
 
-  {
-    element: <AuthLayout />,
-    children: [
-      {
-        path: "/login",
-        element: <LoginPage />,
-      },
+            {
+              path:
+                "/settings",
+              element:
+                <SettingsPage />,
+            },
+          ],
+        },
 
-      {
-        path: "/register",
-        element: <RegisterPage />,
-      },
+        /* ===============================================
+           NOT FOUND
+        =============================================== */
 
-      {
-        path: "/forgot-password",
-        element: <ForgotPasswordPage />,
-      },
-    ],
-  },
-]);
+        {
+          path: "*",
+          element:
+            <NotFoundPage />,
+        },
+      ],
+    },
+
+    /* =====================================================
+       AUTH ROUTES
+    ===================================================== */
+
+    {
+      element:
+        <AuthLayout />,
+
+      children: [
+        {
+          path:
+            "/login",
+          element:
+            <LoginPage />,
+        },
+
+        {
+          path:
+            "/register",
+          element:
+            <RegisterPage />,
+        },
+
+        {
+          path:
+            "/forgot-password",
+          element:
+            <ForgotPasswordPage />,
+        },
+
+        {
+          path:
+            "/reset-password",
+          element:
+            <ResetPasswordPage />,
+        },
+      ],
+    },
+  ]);
+
+/* =========================================================
+   APP
+========================================================= */
 
 function App() {
   return (

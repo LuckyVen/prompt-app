@@ -1,130 +1,484 @@
 import {
-  CircleHelp,
-  LogIn,
+  FileText,
+  Heart,
+  LayoutGrid,
   Menu,
+  Plus,
+  Settings,
+  UserRound,
+  X,
 } from "lucide-react";
 
 import {
-  Link,
-  useNavigate,
-} from "react-router-dom";
+  useEffect,
+  useState,
+} from "react";
 
 import {
-  useAuth,
-} from "../../hooks/useAuth";
+  Link,
+  NavLink,
+} from "react-router-dom";
 
-function TopBar() {
-  const navigate =
-    useNavigate();
+import AccountMenu from "../account/AccountMenu";
 
-  const {
-    user,
-  } = useAuth();
+interface TopBarProps {
+  transparent?: boolean;
+}
 
-  /*
-   * ===============================================
-   * USER INITIALS
-   * ===============================================
-   */
+const mobileNavigationItems = [
+  {
+    label: "My Prompts",
+    to: "/prompts",
+    icon: FileText,
+  },
 
-  const initials =
-    user?.name
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((part) =>
-        part
-          .charAt(0)
-          .toUpperCase(),
-      )
-      .join("") ??
-    "";
+  {
+    label: "Favorites",
+    to: "/favorites",
+    icon: Heart,
+  },
+
+  {
+    label: "Templates",
+    to: "/templates",
+    icon: LayoutGrid,
+  },
+
+  {
+    label: "Profile",
+    to: "/profile",
+    icon: UserRound,
+  },
+
+  {
+    label: "Settings",
+    to: "/settings",
+    icon: Settings,
+  },
+];
+
+function TopBar({
+  transparent = false,
+}: TopBarProps) {
+  const [
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
+  ] = useState(false);
+
+  /* =========================================
+     ESCAPE + BODY SCROLL
+  ========================================= */
+
+  useEffect(() => {
+    function handleKeyDown(
+      event: KeyboardEvent,
+    ) {
+      if (
+        event.key === "Escape"
+      ) {
+        setIsMobileMenuOpen(
+          false,
+        );
+      }
+    }
+
+    document.addEventListener(
+      "keydown",
+      handleKeyDown,
+    );
+
+    if (isMobileMenuOpen) {
+      document.body.style.overflow =
+        "hidden";
+    } else {
+      document.body.style.overflow =
+        "";
+    }
+
+    return () => {
+      document.removeEventListener(
+        "keydown",
+        handleKeyDown,
+      );
+
+      document.body.style.overflow =
+        "";
+    };
+  }, [isMobileMenuOpen]);
+
+  function closeMobileMenu() {
+    setIsMobileMenuOpen(
+      false,
+    );
+  }
 
   return (
-    <header className="flex h-16 w-full min-w-0 shrink-0 items-center justify-between border-b border-border bg-surface px-3 sm:px-6 lg:px-8">
+    <>
+      {/* =========================================
+          TOP BAR
+      ========================================= */}
 
-      {/* ========================================= */}
-      {/* MOBILE BRAND                              */}
-      {/* ========================================= */}
+      <header
+        className={[
+          `
+            relative
+            z-40
+            flex
+            h-16
+            w-full
+            min-w-0
+            shrink-0
+            items-center
+            justify-between
+            px-4
+            sm:px-6
+            lg:px-8
+          `,
 
-      <div className="flex min-w-0 items-center gap-1 sm:gap-2 lg:hidden">
+          transparent
+            ? "bg-transparent"
+            : "bg-surface",
+        ].join(" ")}
+      >
+        {/* =======================================
+            MOBILE LEFT
+        ======================================= */}
 
-        <button
-          type="button"
-          aria-label="Open menu"
-          onClick={() =>
-            navigate(
-              "/templates",
-            )
-          }
-          className="flex size-10 shrink-0 items-center justify-center rounded-prompt-md text-text-secondary transition-colors hover:bg-background hover:text-text-primary"
-        >
-          <Menu
-            size={20}
-            strokeWidth={1.8}
-          />
-        </button>
-
-        <Link
-          to="/"
-          className="truncate text-lg font-semibold tracking-tight text-text-primary"
-        >
-          PROMPT.
-        </Link>
-
-      </div>
-
-      <div className="hidden lg:block" />
-
-      {/* ========================================= */}
-      {/* RIGHT ACTIONS                             */}
-      {/* ========================================= */}
-
-      <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-
-        <button
-          type="button"
-          aria-label="Help"
-          className="flex size-10 shrink-0 items-center justify-center rounded-prompt-md text-text-secondary transition-colors hover:bg-background hover:text-text-primary"
-        >
-          <CircleHelp
-            size={19}
-            strokeWidth={1.8}
-          />
-        </button>
-
-        {/* AUTHENTICATED USER */}
-
-        {user ? (
-          <Link
-            to="/profile"
-            aria-label={`Open ${user.name}'s profile`}
-            title={user.name}
-            className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-soft text-xs font-semibold text-primary transition-colors hover:bg-primary hover:text-white"
+        <div className="flex min-w-0 items-center gap-2 lg:hidden">
+          <button
+            type="button"
+            aria-label="Open navigation"
+            aria-expanded={
+              isMobileMenuOpen
+            }
+            onClick={() =>
+              setIsMobileMenuOpen(
+                true,
+              )
+            }
+            className="
+              flex
+              size-10
+              shrink-0
+              items-center
+              justify-center
+              rounded-xl
+              text-text-secondary
+              transition
+              hover:bg-white/5
+              hover:text-text-primary
+            "
           >
-            {initials || "U"}
-          </Link>
-        ) : (
-
-          /* LOGGED OUT */
-
-          <Link
-            to="/login"
-            aria-label="Sign in"
-            title="Sign in"
-            className="flex size-9 shrink-0 items-center justify-center rounded-prompt-md text-text-secondary transition-colors hover:bg-background hover:text-primary"
-          >
-            <LogIn
-              aria-hidden="true"
-              className="size-4"
+            <Menu
+              size={21}
+              strokeWidth={1.8}
             />
+          </button>
+
+          <Link
+            to="/"
+            className="
+              truncate
+              text-lg
+              font-semibold
+              tracking-[-0.03em]
+              text-text-primary
+            "
+          >
+            PROMPT.
           </Link>
-        )}
+        </div>
 
+        {/* =======================================
+            DESKTOP SPACER
+        ======================================= */}
+
+        <div className="hidden lg:block" />
+
+        {/* =======================================
+            ACCOUNT
+        ======================================= */}
+
+        <AccountMenu variant="avatar" />
+      </header>
+
+      {/* =========================================
+          MOBILE DRAWER
+      ========================================= */}
+      
+      <div
+        aria-hidden={
+          !isMobileMenuOpen
+        }
+        className={[
+          `
+            fixed
+            inset-0
+            z-[200]
+            lg:hidden
+      
+            transition
+            duration-300
+          `,
+      
+          isMobileMenuOpen
+            ? "pointer-events-auto"
+            : "pointer-events-none",
+        ].join(" ")}
+      >
+        {/* =====================================
+            BACKDROP
+        ===================================== */}
+      
+        <button
+          type="button"
+          tabIndex={
+            isMobileMenuOpen
+              ? 0
+              : -1
+          }
+          aria-label="Close navigation"
+          onClick={
+            closeMobileMenu
+          }
+          className={[
+            `
+              absolute
+              inset-0
+              bg-black/55
+              backdrop-blur-[2px]
+      
+              transition-opacity
+              duration-300
+              ease-out
+            `,
+      
+            isMobileMenuOpen
+              ? "opacity-100"
+              : "opacity-0",
+          ].join(" ")}
+        />
+      
+        {/* =====================================
+            DRAWER
+        ===================================== */}
+      
+        <aside
+          className={[
+            `
+              absolute
+              inset-y-0
+              left-0
+      
+              flex
+              w-[min(84vw,320px)]
+              flex-col
+      
+              border-r
+              border-border
+              bg-surface
+              shadow-2xl
+      
+              will-change-transform
+      
+              transition-transform
+              duration-300
+              ease-[cubic-bezier(0.22,1,0.36,1)]
+            `,
+      
+            isMobileMenuOpen
+              ? "translate-x-0"
+              : "-translate-x-full",
+          ].join(" ")}
+        >
+          {/* ===================================
+              DRAWER HEADER
+          =================================== */}
+      
+          <div
+            className="
+              flex
+              h-16
+              shrink-0
+              items-center
+              justify-between
+              px-4
+            "
+          >
+            <Link
+              to="/"
+              onClick={
+                closeMobileMenu
+              }
+              className="
+                text-lg
+                font-semibold
+                tracking-[-0.03em]
+                text-text-primary
+              "
+            >
+              PROMPT.
+            </Link>
+      
+            <button
+              type="button"
+              aria-label="Close navigation"
+              onClick={
+                closeMobileMenu
+              }
+              className="
+                flex
+                size-10
+                items-center
+                justify-center
+                rounded-xl
+                text-text-secondary
+      
+                transition
+                duration-200
+      
+                hover:bg-background
+                hover:text-text-primary
+      
+                active:scale-95
+              "
+            >
+              <X
+                size={20}
+                strokeWidth={1.8}
+              />
+            </button>
+          </div>
+      
+          {/* ===================================
+              NEW PROMPT
+          =================================== */}
+      
+          <div className="px-4 pt-3">
+            <Link
+              to="/"
+              onClick={
+                closeMobileMenu
+              }
+              className="
+                flex
+                h-12
+                w-full
+                items-center
+                justify-center
+                gap-2
+                rounded-xl
+                bg-primary
+                text-sm
+                font-semibold
+                text-white
+                transition
+                hover:bg-primary-hover
+              "
+            >
+              <Plus
+                size={18}
+                strokeWidth={2}
+              />
+      
+              New Prompt
+            </Link>
+          </div>
+      
+          {/* ===================================
+              NAVIGATION
+          =================================== */}
+      
+          <nav
+            className="
+              min-h-0
+              flex-1
+              overflow-y-auto
+              px-3
+              py-6
+            "
+          >
+            <div className="space-y-1">
+              {mobileNavigationItems.map(
+                (item) => {
+                  const Icon =
+                    item.icon;
+      
+                  return (
+                    <NavLink
+                      key={
+                        item.to
+                      }
+                      to={
+                        item.to
+                      }
+                      end
+                      onClick={
+                        closeMobileMenu
+                      }
+                      className={({
+                        isActive,
+                      }) =>
+                        [
+                          `
+                            flex
+                            h-11
+                            items-center
+                            gap-3
+                            rounded-xl
+                            px-3
+                            text-sm
+                            font-medium
+                            transition-colors
+                          `,
+      
+                          isActive
+                            ? "bg-primary-soft text-primary"
+                            : "text-text-secondary hover:bg-background hover:text-text-primary",
+                        ].join(
+                          " ",
+                        )
+                      }
+                    >
+                      <Icon
+                        size={18}
+                        strokeWidth={
+                          1.8
+                        }
+                      />
+      
+                      <span>
+                        {
+                          item.label
+                        }
+                      </span>
+                    </NavLink>
+                  );
+                },
+              )}
+            </div>
+          </nav>
+      
+          {/* ===================================
+              BOTTOM NOTE
+          =================================== */}
+      
+          <div
+            className="
+              shrink-0
+              border-t
+              border-border
+              px-5
+              py-4
+            "
+          >
+            <p className="text-xs text-text-muted">
+              PROMPT.
+            </p>
+          </div>
+        </aside>
       </div>
-
-    </header>
+    </>
   );
 }
 

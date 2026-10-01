@@ -9,52 +9,36 @@ import {
 } from "../controllers/authController.js";
 
 import {
+  requestPasswordReset,
+  resetPassword,
+} from "../controllers/passwordResetController.js";
+
+import {
   requireAuth,
 } from "../middleware/authMiddleware.js";
-
-import {
-  authRateLimiter,
-} from "../middleware/rateLimiters.js";
-
-import {
-  validateLogin,
-  validateRegister,
-} from "../middleware/authValidation.js";
 
 const authRouter =
   Router();
 
-/*
- * ===============================================
- * REGISTER
- * ===============================================
- */
-
 authRouter.post(
   "/register",
-  authRateLimiter,
-  validateRegister,
   register,
 );
 
-/*
- * ===============================================
- * LOGIN
- * ===============================================
- */
-
 authRouter.post(
   "/login",
-  authRateLimiter,
-  validateLogin,
   login,
 );
 
-/*
- * ===============================================
- * CURRENT USER
- * ===============================================
- */
+authRouter.post(
+  "/forgot-password",
+  requestPasswordReset,
+);
+
+authRouter.post(
+  "/reset-password",
+  resetPassword,
+);
 
 authRouter.get(
   "/me",
