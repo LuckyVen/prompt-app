@@ -2,12 +2,110 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>prompt-app</title>
+
+    <!--
+      Apply the saved theme as early as possible.
+      This runs before React starts and before the browser
+      gets a chance to paint the page in the wrong theme.
+    -->
+    <script>
+      (() => {
+        try {
+          const storedTheme =
+            localStorage.getItem("prompt.theme");
+
+          const theme =
+            storedTheme === "light" ||
+            storedTheme === "dark" ||
+            storedTheme === "system"
+              ? storedTheme
+              : "system";
+
+          const systemPrefersDark =
+            window.matchMedia(
+              "(prefers-color-scheme: dark)"
+            ).matches;
+
+          const resolvedTheme =
+            theme === "system"
+              ? systemPrefersDark
+                ? "dark"
+                : "light"
+              : theme;
+
+          document.documentElement.dataset.theme =
+            resolvedTheme;
+
+          document.documentElement.style.colorScheme =
+            resolvedTheme;
+
+          document.documentElement.style.backgroundColor =
+            resolvedTheme === "dark"
+              ? "#111113"
+              : "#f8f8fa";
+        } catch {
+          document.documentElement.dataset.theme =
+            "light";
+
+          document.documentElement.style.colorScheme =
+            "light";
+
+          document.documentElement.style.backgroundColor =
+            "#f8f8fa";
+        }
+      })();
+    </script>
+
+    <!--
+      Prevent the initial browser paint from flashing white
+      before the main application CSS has finished loading.
+    -->
+    <style>
+      html,
+      body,
+      #root {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      html,
+      body,
+      #root {
+        background-color: #f8f8fa;
+      }
+
+      html[data-theme="dark"],
+      html[data-theme="dark"] body,
+      html[data-theme="dark"] #root {
+        background-color: #111113;
+      }
+    </style>
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicon.svg"
+    />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <meta
+      name="color-scheme"
+      content="light dark"
+    />
+
+    <title>PROMPT.</title>
   </head>
+
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+
+    <script
+      type="module"
+      src="/src/main.tsx"
+    ></script>
   </body>
 </html>
